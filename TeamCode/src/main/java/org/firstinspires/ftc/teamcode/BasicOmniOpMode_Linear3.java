@@ -79,6 +79,7 @@ public class BasicOmniOpMode_Linear3 extends LinearOpMode {
     private DcMotor turretDrive;
     private Servo grab;
 
+
    // private int armPos;
 
     @Override
@@ -90,10 +91,10 @@ public class BasicOmniOpMode_Linear3 extends LinearOpMode {
         leftBackDrive  = hardwareMap.get(DcMotor.class, "leftBackMotor");
         rightFrontDrive = hardwareMap.get(DcMotor.class, "rightFrontMotor");
         rightBackDrive = hardwareMap.get(DcMotor.class, "rightBackMotor");
-        leftArmDrive = hardwareMap.get(DcMotor.class, "rightBackMotor");
-        rightArmDrive = hardwareMap.get(DcMotor.class, "rightBackMotor");
-        grabberDrive = hardwareMap.get(DcMotor.class, "rightBackMotor");
-        turretDrive = hardwareMap.get(DcMotor.class, "rightBackMotor");
+        leftArmDrive = hardwareMap.get(DcMotor.class, "leftArmMotor");
+        rightArmDrive = hardwareMap.get(DcMotor.class, "rightArmMotor");
+        grabberDrive = hardwareMap.get(DcMotor.class, "grabberMotor");
+        turretDrive = hardwareMap.get(DcMotor.class, "turretMotor");
         grab = hardwareMap.get(Servo.class, "grabServo");
 
 
@@ -115,6 +116,8 @@ public class BasicOmniOpMode_Linear3 extends LinearOpMode {
         leftBackDrive.setDirection(DcMotor.Direction.FORWARD);
         rightFrontDrive.setDirection(DcMotor.Direction.REVERSE);
         rightBackDrive.setDirection(DcMotor.Direction.REVERSE);
+        leftArmDrive.setDirection(DcMotor.Direction.REVERSE);
+
 
         leftArmDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightArmDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -135,7 +138,7 @@ public class BasicOmniOpMode_Linear3 extends LinearOpMode {
             // POV Mode uses left joystick to go forward & strafe, and right joystick to rotate.
             double axial   = -gamepad1.left_stick_y;  // Note: pushing stick forward gives negative value
             double lateral =  gamepad1.left_stick_x;
-            double yaw     =  ((gamepad1.right_stick_x) * 0.9) ;
+            double yaw     =  (-(gamepad1.right_stick_x) * 0.9) ;
 
             // Combine the joystick requests for each axis-motion to determine each wheel's power.
             // Set up a variable for each drive wheel to save the power level for telemetry.
@@ -244,7 +247,7 @@ public class BasicOmniOpMode_Linear3 extends LinearOpMode {
 
             if (gamepad1.right_bumper) {
                 //grab cone
-                grab.setPosition(0.4);
+                grab.setPosition(0.35);
             }
             if (gamepad1.left_bumper) {
                //let go cone

@@ -13,7 +13,7 @@ import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 
 
-@Autonomous
+@Autonomous (name = "a_test")
 public class test extends LinearOpMode {
 
     private DcMotor leftArmDrive;
