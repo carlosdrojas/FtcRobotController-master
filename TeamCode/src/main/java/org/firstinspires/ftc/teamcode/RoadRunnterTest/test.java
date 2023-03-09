@@ -37,6 +37,7 @@ public class test extends LinearOpMode {
         rightArmDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         grabberDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         turretDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightArmDrive.setDirection(DcMotorSimple.Direction.REVERSE);
         /*
         arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         arm.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -60,30 +61,34 @@ public class test extends LinearOpMode {
 
         while (!isStopRequested()) {
             TrajectorySequence trajSeq = drive.trajectorySequenceBuilder(startPose)
-                    .forward(40)
+                    .addTemporalMarker(1, () -> {
+                        leftArmDrive.setTargetPosition(1700);
+                        rightArmDrive.setTargetPosition(1700);
+
+                        leftArmDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                        rightArmDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+                        leftArmDrive.setPower(0.5);
+                        leftArmDrive.setPower(0.5);
+                        rightArmDrive.setPower(0.5);
+
+                    })
+                    /*
+                    .addTemporalMarker(5, () -> {
+                        turretDrive.setTargetPosition(-700);
+
+                        turretDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+                        turretDrive.setPower(0.5);
+
+                    })
+
+                     */
                     .waitSeconds(30)
                     .build();
             drive.followTrajectorySequence(trajSeq);
         }
     }
 
-    //all encoder stuff
-    /*
-    private void drive( int armTarget, double speed) {
 
-        armPos += armTarget;
-
-        arm.setTargetPosition(armPos);
-
-        arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        arm.setPower(speed);
-
-        while(opModeIsActive()  && arm.isBusy()) {
-            idle();
-        }
-
-    }
-
-     */
 }

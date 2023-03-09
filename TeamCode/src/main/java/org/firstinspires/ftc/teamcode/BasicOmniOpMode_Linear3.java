@@ -80,7 +80,6 @@ public class BasicOmniOpMode_Linear3 extends LinearOpMode {
     private Servo grab;
 
 
-   // private int armPos;
 
     @Override
     public void runOpMode() {
@@ -97,10 +96,6 @@ public class BasicOmniOpMode_Linear3 extends LinearOpMode {
         turretDrive = hardwareMap.get(DcMotor.class, "turretMotor");
         grab = hardwareMap.get(Servo.class, "grabServo");
 
-
-        //arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-        //armPos = 0;
 
         // ########################################################################################
         // !!!            IMPORTANT Drive Information. Test your motor directions.            !!!!!
@@ -133,6 +128,9 @@ public class BasicOmniOpMode_Linear3 extends LinearOpMode {
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
+
+
+
             double max;
 
             // POV Mode uses left joystick to go forward & strafe, and right joystick to rotate.
@@ -183,54 +181,14 @@ public class BasicOmniOpMode_Linear3 extends LinearOpMode {
             rightBackDrive.setPower(rightBackPower * 0.7);
 
 
-
-
-
-            /*
-            if (gamepad1.y) {
-                while (gamepad1.y) {
-                    drive(-2700, .25 );
-                }
-            }
-            if (gamepad1.a) {
-                while (gamepad1.a) {
-                    drive(2700, .25 );
-                    //1000 is 1st level
-                }
-            }
-
-             */
-
-            /*
-            if (gamepad1.y) {
-                while (gamepad1.y) {
-                    arm.setPower(1);
-                }
-            }
-            else if (gamepad1.a) {
-                while (gamepad1.a) {
-                    arm.setPower(-1);
-                }
-            }
-            else {
-                    arm.setPower(0);
-            }
-
-             */
-
-            /*
-            else {
-                arm.setMode(run to position);
-                arm.setPower(0.2);
-                arm.setTargetPosition(motor.getCurrentPosition
-            }
-
-             */
+            //arm power
             leftArmDrive.setPower(gamepad2.left_stick_y);
             rightArmDrive.setPower(gamepad2.left_stick_y);
 
+            //turret power
             turretDrive.setPower(gamepad2.right_stick_x);
 
+            //grabber motor control
             if (gamepad2.left_bumper) {
                 grabberDrive.setPower(0.7);
             }
@@ -245,6 +203,7 @@ public class BasicOmniOpMode_Linear3 extends LinearOpMode {
 
 
 
+            //grabber servo control
             if (gamepad1.right_bumper) {
                 //grab cone
                 grab.setPosition(0.35);
