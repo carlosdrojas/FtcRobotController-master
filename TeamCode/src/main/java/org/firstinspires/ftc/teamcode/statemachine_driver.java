@@ -131,12 +131,12 @@ public class statemachine_driver extends OpMode
         leftArmDrive.setTargetPosition(LIFT_BOTTOM);
         rightArmDrive.setTargetPosition(LIFT_BOTTOM);
         turretDrive.setTargetPosition(LIFT_CENTER);
-        //grabberDrive.setTargetPosition(0);
+        grabberDrive.setTargetPosition(0);
 
         leftArmDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rightArmDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         turretDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        //grabberDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        grabberDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         telemetry.addData("Status", "Initialized");
         telemetry.update();
@@ -158,7 +158,7 @@ public class statemachine_driver extends OpMode
         leftArmDrive.setPower(0.7);
         rightArmDrive.setPower(0.7);
         turretDrive.setPower(0.7);
-        //grabberDrive.setPower(1);
+        grabberDrive.setPower(1);
 
         switch (liftState) {
             case LIFT_START:
