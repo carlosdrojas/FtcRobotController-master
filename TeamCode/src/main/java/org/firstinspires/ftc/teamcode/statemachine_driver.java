@@ -65,35 +65,33 @@ public class statemachine_driver extends OpMode
         LIFT_EXTEND_LOW_RIGHT,
         LIFT_EXTEND_MID_RIGHT,
         LIFT_EXTEND_HIGH_RIGHT,
+        LIFT_RETRACT,
         LIFT_RETRACT_TRAVEL,
-        LIFT_RETRACT_LOW_LEFT,
-        LIFT_RETRACT_MID_LEFT,
-        LIFT_RETRACT_HIGH_LEFT,
-        LIFT_RETRACT_LOW_RIGHT,
-        LIFT_RETRACT_MID_RIGHT,
-        LIFT_RETRACT_HIGH_RIGHT,
-        LIFT_SCORE_LOW,
-        LIFT_SCORE_MID,
-        LIFT_SCORE_HIGH,
+        LIFT_SCORE_LOW_LEFT,
+        LIFT_SCORE_MID_LEFT,
+        LIFT_SCORE_HIGH_LEFT,
+        LIFT_SCORE_LOW_RIGHT,
+        LIFT_SCORE_MID_RIGHT,
+        LIFT_SCORE_HIGH_RIGHT,
     };
 
     LiftState liftState = LiftState.LIFT_START;
 
     ElapsedTime liftTimer = new ElapsedTime();
 
-    final double SCORE_TIME = 1;
+    final double SCORE_TIME = .6;
 
     final int LIFT_TRAVEL = 200;
     final int LIFT_BOTTOM = 0;
     final int LIFT_LOW = 1200;
-    final int LIFT_LOW_SCORE = 850;
+    final int LIFT_LOW_SCORE = 900;
     final int LIFT_MID = 2000;
     final int LIFT_MID_SCORE = 1650;
     final int LIFT_HIGH = 2900;
     final int LIFT_HIGH_SCORE = 2550;
     final int LIFT_LEFT = -700;
     final int LIFT_RIGHT = 700;
-    final int LIFT_MIDDLE = 0;
+    final int LIFT_CENTER = 0;
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -125,13 +123,20 @@ public class statemachine_driver extends OpMode
         turretDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         grabberDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
+        leftFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        leftBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
         leftArmDrive.setTargetPosition(LIFT_BOTTOM);
         rightArmDrive.setTargetPosition(LIFT_BOTTOM);
-        turretDrive.setTargetPosition(LIFT_MIDDLE);
+        turretDrive.setTargetPosition(LIFT_CENTER);
+        //grabberDrive.setTargetPosition(0);
 
         leftArmDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rightArmDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         turretDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        //grabberDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         telemetry.addData("Status", "Initialized");
         telemetry.update();
@@ -150,29 +155,57 @@ public class statemachine_driver extends OpMode
     @Override
     public void loop() {
 
-        leftArmDrive.setPower(0.5);
-        rightArmDrive.setPower(0.5);
-        turretDrive.setPower(0.5);
+        leftArmDrive.setPower(0.7);
+        rightArmDrive.setPower(0.7);
+        turretDrive.setPower(0.7);
+        //grabberDrive.setPower(1);
 
         switch (liftState) {
             case LIFT_START:
                 //wait for input
-                if (gamepad1.right_bumper) {
+                if (gamepad2.right_bumper) {
                     //right bumper pressed, start extending
                     leftArmDrive.setTargetPosition(LIFT_TRAVEL);
                     rightArmDrive.setTargetPosition(LIFT_TRAVEL);
                     liftState = LiftState.LIFT_EXTEND_TRAVEL;
                 }
-                if (gamepad1.dpad_left) {
+                if (gamepad2.dpad_left) {
                     //left dpad pressed, start extending
                     leftArmDrive.setTargetPosition(LIFT_LOW);
                     rightArmDrive.setTargetPosition(LIFT_LOW);
                     liftState = LiftState.LIFT_EXTEND_LOW_LEFT;
                 }
+                if (gamepad2.dpad_up) {
+                    //up dpad pressed, start extending
+                    leftArmDrive.setTargetPosition(LIFT_MID);
+                    rightArmDrive.setTargetPosition(LIFT_MID);
+                    liftState = LiftState.LIFT_EXTEND_MID_LEFT;
+                }
+                if (gamepad2.dpad_right) {
+                    leftArmDrive.setTargetPosition(LIFT_HIGH);
+                    rightArmDrive.setTargetPosition(LIFT_HIGH);
+                    liftState = LiftState.LIFT_EXTEND_HIGH_LEFT;
+                }
+                if (gamepad2.x) {
+                    leftArmDrive.setTargetPosition(LIFT_LOW);
+                    rightArmDrive.setTargetPosition(LIFT_LOW);
+                    liftState = LiftState.LIFT_EXTEND_LOW_RIGHT;
+                }
+                if (gamepad2.y) {
+                    leftArmDrive.setTargetPosition(LIFT_MID);
+                    rightArmDrive.setTargetPosition(LIFT_MID);
+                    liftState = LiftState.LIFT_EXTEND_MID_RIGHT;
+                }
+                if (gamepad2.b) {
+                    leftArmDrive.setTargetPosition(LIFT_HIGH);
+                    rightArmDrive.setTargetPosition(LIFT_HIGH);
+                    liftState = LiftState.LIFT_EXTEND_HIGH_RIGHT;
+                }
                 break;
+
             case LIFT_EXTEND_TRAVEL:
                 //check if lift has extended to travel, otherwise do nothing
-                if ((Math.abs(leftArmDrive.getCurrentPosition() - LIFT_TRAVEL) < 10) && (Math.abs(rightArmDrive.getCurrentPosition() - LIFT_TRAVEL) < 10) && gamepad1.a) {
+                if ((Math.abs(leftArmDrive.getCurrentPosition() - LIFT_TRAVEL) < 10) && (Math.abs(rightArmDrive.getCurrentPosition() - LIFT_TRAVEL) < 10) && gamepad2.a) {
                     leftArmDrive.setTargetPosition(LIFT_BOTTOM);
                     rightArmDrive.setTargetPosition(LIFT_BOTTOM);
                     liftState = LiftState.LIFT_RETRACT_TRAVEL;
@@ -182,32 +215,155 @@ public class statemachine_driver extends OpMode
                     liftState = LiftState.LIFT_START;
                 }
                 break;
+
             case LIFT_EXTEND_LOW_LEFT:
                 if ((Math.abs(leftArmDrive.getCurrentPosition() - LIFT_LOW) < 20) && (Math.abs(rightArmDrive.getCurrentPosition() - LIFT_LOW) < 20)) {
                     turretDrive.setTargetPosition(LIFT_LEFT);
                 }
                 if (gamepad2.dpad_down) {
+                    liftTimer.reset();
                     leftArmDrive.setTargetPosition(LIFT_LOW_SCORE);
                     rightArmDrive.setTargetPosition(LIFT_LOW_SCORE);
-                    liftState = LiftState.LIFT_SCORE_LOW;
+                    liftState = LiftState.LIFT_SCORE_LOW_LEFT;
                 }
-                if (gamepad1.a) {
+                if (gamepad2.a) {
                     leftArmDrive.setTargetPosition(LIFT_BOTTOM);
                     rightArmDrive.setTargetPosition(LIFT_BOTTOM);
-                    turretDrive.setTargetPosition(LIFT_MIDDLE);
-                    liftState = LiftState.LIFT_RETRACT_LOW_LEFT;
+                    turretDrive.setTargetPosition(LIFT_CENTER);
+                    liftState = LiftState.LIFT_RETRACT;
                 }
                 break;
-            case LIFT_SCORE_LOW:
+
+            case LIFT_SCORE_LOW_LEFT:
                 if (liftTimer.seconds() >= SCORE_TIME) {
                     leftArmDrive.setTargetPosition(LIFT_LOW);
                     rightArmDrive.setTargetPosition(LIFT_LOW);
                     liftState = LiftState.LIFT_EXTEND_LOW_LEFT;
                 }
-
-            case LIFT_RETRACT_LOW_LEFT:
-                if ((Math.abs(leftArmDrive.getCurrentPosition() - LIFT_BOTTOM) < 10) && (Math.abs(rightArmDrive.getCurrentPosition() - LIFT_BOTTOM) < 10)) {
+                break;
+            case LIFT_RETRACT:
+                if ((Math.abs(leftArmDrive.getCurrentPosition() - LIFT_BOTTOM) < 10) && (Math.abs(rightArmDrive.getCurrentPosition() - LIFT_BOTTOM) < 10) && (Math.abs(turretDrive.getCurrentPosition() - LIFT_CENTER) < 10)) {
                     liftState = LiftState.LIFT_START;
+                }
+                break;
+            case LIFT_EXTEND_MID_LEFT:
+                if ((Math.abs(leftArmDrive.getCurrentPosition() - LIFT_MID) < 20) && (Math.abs(rightArmDrive.getCurrentPosition() - LIFT_MID) < 20)) {
+                    turretDrive.setTargetPosition(LIFT_LEFT);
+                }
+                if (gamepad2.dpad_down) {
+                    liftTimer.reset();
+                    leftArmDrive.setTargetPosition(LIFT_MID_SCORE);
+                    rightArmDrive.setTargetPosition(LIFT_MID_SCORE);
+                    liftState = LiftState.LIFT_SCORE_MID_LEFT;
+                }
+                if (gamepad2.a) {
+                    leftArmDrive.setTargetPosition(LIFT_BOTTOM);
+                    rightArmDrive.setTargetPosition(LIFT_BOTTOM);
+                    turretDrive.setTargetPosition(LIFT_CENTER);
+                    liftState = LiftState.LIFT_RETRACT;
+                }
+                break;
+            case LIFT_SCORE_MID_LEFT:
+                if (liftTimer.seconds() >= SCORE_TIME) {
+                    leftArmDrive.setTargetPosition(LIFT_MID);
+                    rightArmDrive.setTargetPosition(LIFT_MID);
+                    liftState = LiftState.LIFT_EXTEND_MID_LEFT;
+                }
+                break;
+            case LIFT_EXTEND_HIGH_LEFT:
+                if ((Math.abs(leftArmDrive.getCurrentPosition() - LIFT_HIGH) < 20) && (Math.abs(rightArmDrive.getCurrentPosition() - LIFT_HIGH) < 20)) {
+                    turretDrive.setTargetPosition(LIFT_LEFT);
+                }
+                if (gamepad2.dpad_down) {
+                    liftTimer.reset();
+                    leftArmDrive.setTargetPosition(LIFT_HIGH_SCORE);
+                    rightArmDrive.setTargetPosition(LIFT_HIGH_SCORE);
+                    liftState = LiftState.LIFT_SCORE_HIGH_LEFT;
+                }
+                if (gamepad2.a) {
+                    leftArmDrive.setTargetPosition(LIFT_BOTTOM);
+                    rightArmDrive.setTargetPosition(LIFT_BOTTOM);
+                    turretDrive.setTargetPosition(LIFT_CENTER);
+                    liftState = LiftState.LIFT_RETRACT;
+                }
+                break;
+            case LIFT_SCORE_HIGH_LEFT:
+                if (liftTimer.seconds() >= SCORE_TIME) {
+                    leftArmDrive.setTargetPosition(LIFT_HIGH);
+                    rightArmDrive.setTargetPosition(LIFT_HIGH);
+                    liftState = LiftState.LIFT_EXTEND_HIGH_LEFT;
+                }
+                break;
+            case LIFT_EXTEND_LOW_RIGHT:
+                if ((Math.abs(leftArmDrive.getCurrentPosition() - LIFT_LOW) < 20) && (Math.abs(rightArmDrive.getCurrentPosition() - LIFT_LOW) < 20)) {
+                    turretDrive.setTargetPosition(LIFT_RIGHT);
+                }
+                if (gamepad2.dpad_down) {
+                    liftTimer.reset();
+                    leftArmDrive.setTargetPosition(LIFT_LOW_SCORE);
+                    rightArmDrive.setTargetPosition(LIFT_LOW_SCORE);
+                    liftState = LiftState.LIFT_SCORE_LOW_RIGHT;
+                }
+                if (gamepad2.a) {
+                    leftArmDrive.setTargetPosition(LIFT_BOTTOM);
+                    rightArmDrive.setTargetPosition(LIFT_BOTTOM);
+                    turretDrive.setTargetPosition(LIFT_CENTER);
+                    liftState = LiftState.LIFT_RETRACT;
+                }
+                break;
+            case LIFT_SCORE_LOW_RIGHT:
+                if (liftTimer.seconds() >= SCORE_TIME) {
+                    leftArmDrive.setTargetPosition(LIFT_LOW);
+                    rightArmDrive.setTargetPosition(LIFT_LOW);
+                    liftState = LiftState.LIFT_EXTEND_LOW_RIGHT;
+                }
+                break;
+            case LIFT_EXTEND_MID_RIGHT:
+                if ((Math.abs(leftArmDrive.getCurrentPosition() - LIFT_MID) < 20) && (Math.abs(rightArmDrive.getCurrentPosition() - LIFT_MID) < 20)) {
+                    turretDrive.setTargetPosition(LIFT_RIGHT);
+                }
+                if (gamepad2.dpad_down) {
+                    liftTimer.reset();
+                    leftArmDrive.setTargetPosition(LIFT_MID_SCORE);
+                    rightArmDrive.setTargetPosition(LIFT_MID_SCORE);
+                    liftState = LiftState.LIFT_SCORE_MID_RIGHT;
+                }
+                if (gamepad2.a) {
+                    leftArmDrive.setTargetPosition(LIFT_BOTTOM);
+                    rightArmDrive.setTargetPosition(LIFT_BOTTOM);
+                    turretDrive.setTargetPosition(LIFT_CENTER);
+                    liftState = LiftState.LIFT_RETRACT;
+                }
+                break;
+            case LIFT_SCORE_MID_RIGHT:
+                if (liftTimer.seconds() >= SCORE_TIME) {
+                    leftArmDrive.setTargetPosition(LIFT_MID);
+                    rightArmDrive.setTargetPosition(LIFT_MID);
+                    liftState = LiftState.LIFT_EXTEND_MID_RIGHT;
+                }
+                break;
+            case LIFT_EXTEND_HIGH_RIGHT:
+                if ((Math.abs(leftArmDrive.getCurrentPosition() - LIFT_HIGH) < 20) && (Math.abs(rightArmDrive.getCurrentPosition() - LIFT_HIGH) < 20)) {
+                    turretDrive.setTargetPosition(LIFT_RIGHT);
+                }
+                if (gamepad2.dpad_down) {
+                    liftTimer.reset();
+                    leftArmDrive.setTargetPosition(LIFT_HIGH_SCORE);
+                    rightArmDrive.setTargetPosition(LIFT_HIGH_SCORE);
+                    liftState = LiftState.LIFT_SCORE_HIGH_RIGHT;
+                }
+                if (gamepad2.a) {
+                    leftArmDrive.setTargetPosition(LIFT_BOTTOM);
+                    rightArmDrive.setTargetPosition(LIFT_BOTTOM);
+                    turretDrive.setTargetPosition(LIFT_CENTER);
+                    liftState = LiftState.LIFT_RETRACT;
+                }
+                break;
+            case LIFT_SCORE_HIGH_RIGHT:
+                if (liftTimer.seconds() >= SCORE_TIME) {
+                    leftArmDrive.setTargetPosition(LIFT_HIGH);
+                    rightArmDrive.setTargetPosition(LIFT_HIGH);
+                    liftState = LiftState.LIFT_EXTEND_HIGH_RIGHT;
                 }
                 break;
             default:
@@ -244,27 +400,21 @@ public class statemachine_driver extends OpMode
             rightBackPower  /= max;
         }
 
-        // This is test code:
-        //
-        // Uncomment the following code to test your motor directions.
-        // Each button should make the corresponding motor run FORWARD.
-        //   1) First get all the motors to take to correct positions on the robot
-        //      by adjusting your Robot Configuration if necessary.
-        //   2) Then make sure they run in the correct direction by modifying the
-        //      the setDirection() calls above.
-        // Once the correct motors move in the correct direction re-comment this code.
-            /*
-            leftFrontPower  = gamepad1.x ? 1.0 : 0.0;  // X gamepad
-            leftBackPower   = gamepad1.a ? 1.0 : 0.0;  // A gamepad
-            rightFrontPower = gamepad1.y ? 1.0 : 0.0;  // Y gamepad
-            rightBackPower  = gamepad1.b ? 1.0 : 0.0;  // B gamepad
-            */
 
         // Send calculated power to wheels
         leftFrontDrive.setPower(leftFrontPower * 0.7);
         rightFrontDrive.setPower(rightFrontPower * 0.7);
         leftBackDrive.setPower(leftBackPower * 0.7);
         rightBackDrive.setPower(rightBackPower * 0.7);
+
+        if (gamepad1.right_bumper) {
+            //grab cone
+            grab.setPosition(0.35);
+        }
+        else if (gamepad1.left_bumper) {
+            //let go cone
+            grab.setPosition(0);
+        }
 
         // Show the elapsed game time and wheel power.
         telemetry.addData("Status", "Run Time: " + runtime.toString());

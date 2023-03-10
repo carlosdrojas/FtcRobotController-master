@@ -208,7 +208,7 @@ public class BasicOmniOpMode_Linear3 extends LinearOpMode {
                 //grab cone
                 grab.setPosition(0.35);
             }
-            if (gamepad1.left_bumper) {
+            else if (gamepad1.left_bumper) {
                //let go cone
                 grab.setPosition(0);
             }
