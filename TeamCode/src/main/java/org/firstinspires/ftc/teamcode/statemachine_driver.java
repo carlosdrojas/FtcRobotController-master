@@ -75,6 +75,13 @@ public class statemachine_driver extends OpMode
         LIFT_SCORE_HIGH_RIGHT,
     };
 
+    public enum DriveState {
+        DRIVER_FORWARD,
+        DRIVER_BACKWARD,
+    };
+
+    DriveState driveState = DriveState.DRIVER_FORWARD;
+
     LiftState liftState = LiftState.LIFT_START;
 
     ElapsedTime liftTimer = new ElapsedTime();
@@ -92,6 +99,8 @@ public class statemachine_driver extends OpMode
     final int LIFT_LEFT = -700;
     final int LIFT_RIGHT = 700;
     final int LIFT_CENTER = 0;
+
+    int direction;
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -155,9 +164,9 @@ public class statemachine_driver extends OpMode
     @Override
     public void loop() {
 
-        leftArmDrive.setPower(0.7);
-        rightArmDrive.setPower(0.7);
-        turretDrive.setPower(0.7);
+        leftArmDrive.setPower(1);
+        rightArmDrive.setPower(1);
+        turretDrive.setPower(1);
         grabberDrive.setPower(1);
 
         switch (liftState) {
@@ -371,13 +380,28 @@ public class statemachine_driver extends OpMode
                 liftState = LiftState.LIFT_START;
         }
 
+        switch (driveState) {
+            case DRIVER_FORWARD:
+                direction = 1;
+                if (gamepad1.a) {
+                    driveState = DriveState.DRIVER_BACKWARD;
+                }
+                break;
+            case DRIVER_BACKWARD:
+                direction = -1;
+                if (gamepad1.a) {
+                    driveState = DriveState.DRIVER_FORWARD;
+                }
+                break;
+        }
+
 
 
         double max;
 
         // POV Mode uses left joystick to go forward & strafe, and right joystick to rotate.
-        double axial   = -gamepad1.left_stick_y;  // Note: pushing stick forward gives negative value
-        double lateral =  gamepad1.left_stick_x;
+        double axial   = -gamepad1.left_stick_y * direction;  // Note: pushing stick forward gives negative value
+        double lateral =  gamepad1.left_stick_x * direction;
         double yaw     =  (-(gamepad1.right_stick_x) * 0.9) ;
 
         // Combine the joystick requests for each axis-motion to determine each wheel's power.
@@ -402,19 +426,20 @@ public class statemachine_driver extends OpMode
 
 
         // Send calculated power to wheels
-        leftFrontDrive.setPower(leftFrontPower * 0.7);
-        rightFrontDrive.setPower(rightFrontPower * 0.7);
-        leftBackDrive.setPower(leftBackPower * 0.7);
-        rightBackDrive.setPower(rightBackPower * 0.7);
+        leftFrontDrive.setPower(leftFrontPower * 0.8);
+        rightFrontDrive.setPower(rightFrontPower * 0.8);
+        leftBackDrive.setPower(leftBackPower * 0.8);
+        rightBackDrive.setPower(rightBackPower * 0.8);
 
         if (gamepad1.right_bumper) {
             //grab cone
-            grab.setPosition(0.35);
+            grab.setPosition(0.37);
         }
         else if (gamepad1.left_bumper) {
             //let go cone
             grab.setPosition(0);
         }
+        //
 
         // Show the elapsed game time and wheel power.
         telemetry.addData("Status", "Run Time: " + runtime.toString());
