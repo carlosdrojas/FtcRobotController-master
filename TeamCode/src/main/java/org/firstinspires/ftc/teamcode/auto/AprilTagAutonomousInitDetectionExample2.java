@@ -94,16 +94,169 @@ public class AprilTagAutonomousInitDetectionExample2 extends LinearOpMode
             turretDrive = hardwareMap.get(DcMotor.class, "turretMotor");
             grabberDrive = hardwareMap.get(DcMotor.class, "grabberMotor");
             grab = hardwareMap.get(Servo.class, "grabServo");
+
             SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
-            leftArmDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            rightArmDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            grabberDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            turretDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            Pose2d startPose = new Pose2d(-61.25, -33, 0);
+
+            /*
+            leftArmDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            rightArmDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            grabberDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            turretDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+             */
+
+            leftArmDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            rightArmDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            turretDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            grabberDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+            rightArmDrive.setDirection(DcMotorSimple.Direction.REVERSE);
+            grabberDrive.setDirection(DcMotorSimple.Direction.REVERSE);
+
+            Pose2d startPose = new Pose2d(-61.25, -25.25, 0);
+
             drive.setPoseEstimate(startPose);
 
             TrajectorySequence traj1 = drive.trajectorySequenceBuilder(startPose)
-                    .forward(40)
+                    .waitSeconds(1)
+                    .lineToConstantHeading(new Vector2d(-60, -29))
+                    .forward(47)
+                    .waitSeconds(2)
+                    //GRAB CONE
+                    .addTemporalMarker(0, () -> {
+                        grab.setPosition(0.35);
+
+                    })
+                    //EXTEND ARM
+                    .addTemporalMarker(1.3, () -> {
+                        grabberDrive.setTargetPosition(1000);
+                        grabberDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                        grabberDrive.setPower(1);
+
+                    })
+                    //RAISE ARM SLIGHTLY
+                    .addTemporalMarker(1.5, () -> {
+                        leftArmDrive.setTargetPosition(200);
+                        rightArmDrive.setTargetPosition(200);
+                        leftArmDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                        rightArmDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                        leftArmDrive.setPower(1);
+                        rightArmDrive.setPower(1);
+
+                    })
+                    //TURN TURRET TO MIDDLE
+                    .addTemporalMarker(1.5, () -> {
+                        turretDrive.setTargetPosition(0);
+                        turretDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                        turretDrive.setPower(.6);
+
+                    })
+                    //RAISE ARM TO HIGH SCORE POS
+                    .addTemporalMarker(2, () -> {
+                        leftArmDrive.setTargetPosition(2900);
+                        rightArmDrive.setTargetPosition(2900);
+                        leftArmDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                        rightArmDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                        leftArmDrive.setPower(.6);
+                        rightArmDrive.setPower(.6);
+
+                    })
+                    //TURN TURRET PRE-SCORE POS
+                    .addTemporalMarker(2.6, () -> {
+                        turretDrive.setTargetPosition(100);
+                        turretDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                        turretDrive.setPower(.6);
+
+                    })
+                    //TURN TURRET SCORE POS
+                    .addTemporalMarker(3.9, () -> {
+                        turretDrive.setTargetPosition(400);
+                        turretDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                        turretDrive.setPower(.6);
+
+                    })
+                    //LOWER ARM SCORE POS
+                    .addTemporalMarker(4.2, () -> {
+                        leftArmDrive.setTargetPosition(2500);
+                        rightArmDrive.setTargetPosition(2500);
+                        leftArmDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                        rightArmDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                        leftArmDrive.setPower(.6);
+                        rightArmDrive.setPower(.6);
+
+                    })
+                    //LET GO CONE
+                    .addTemporalMarker(4.7, () -> {
+                        grab.setPosition(0);
+
+                    })
+                    .addTemporalMarker(5, () -> {
+                        grabberDrive.setTargetPosition(700);
+                        grabberDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                        grabberDrive.setPower(1);
+
+                    })
+                    //TURN TURRET TO STACK
+                    .addTemporalMarker(5.2, () -> {
+                        turretDrive.setTargetPosition(-770);
+                        turretDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                        turretDrive.setPower(.6);
+                    })
+                    //LOWER TURRET TO STACK
+                    .addTemporalMarker(5.4, () -> {
+                        leftArmDrive.setTargetPosition(500);
+                        rightArmDrive.setTargetPosition(500);
+                        leftArmDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                        rightArmDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                        leftArmDrive.setPower(.6);
+                        rightArmDrive.setPower(.6);
+                    })
+                    .addTemporalMarker(5.7, () -> {
+                        grabberDrive.setTargetPosition(1700);
+                        grabberDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                        grabberDrive.setPower(1);
+
+                    })
+                    .addTemporalMarker(7.6, () -> {
+                        grabberDrive.setTargetPosition(2000);
+                        grabberDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                        grabberDrive.setPower(1);
+
+                    })
+                    .addTemporalMarker(8, () -> {
+                        grab.setPosition(0.35);
+
+                    })
+                    .addTemporalMarker(8.5, () -> {
+                        leftArmDrive.setTargetPosition(900);
+                        rightArmDrive.setTargetPosition(900);
+                        leftArmDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                        rightArmDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                        leftArmDrive.setPower(.6);
+                        rightArmDrive.setPower(.6);
+                    })
+                    .addTemporalMarker(9.5, () -> {
+                        turretDrive.setTargetPosition(500);
+                        turretDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                        turretDrive.setPower(.4);
+                    })
+                    .addTemporalMarker(9.6, () -> {
+                        leftArmDrive.setTargetPosition(2900);
+                        rightArmDrive.setTargetPosition(2900);
+                        leftArmDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                        rightArmDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                        leftArmDrive.setPower(.6);
+                        rightArmDrive.setPower(.6);
+
+                    })
+                    .addTemporalMarker(10, () -> {
+                        grabberDrive.setTargetPosition(1600);
+                        grabberDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                        grabberDrive.setPower(1);
+
+                    })
+                    .lineToLinearHeading(new Pose2d(-11, -40, 0 ))
+                    .waitSeconds(30)
                     .build();
 
             TrajectorySequence left = drive.trajectorySequenceBuilder(traj1.end())

@@ -219,6 +219,38 @@ public class statemachine_driver extends OpMode
                     rightArmDrive.setTargetPosition(LIFT_BOTTOM);
                     liftState = LiftState.LIFT_RETRACT_TRAVEL;
                 }
+                if (gamepad2.dpad_left) {
+                    //left dpad pressed, start extending
+                    leftArmDrive.setTargetPosition(LIFT_LOW);
+                    rightArmDrive.setTargetPosition(LIFT_LOW);
+                    liftState = LiftState.LIFT_EXTEND_LOW_LEFT;
+                }
+                if (gamepad2.dpad_up) {
+                    //up dpad pressed, start extending
+                    leftArmDrive.setTargetPosition(LIFT_MID);
+                    rightArmDrive.setTargetPosition(LIFT_MID);
+                    liftState = LiftState.LIFT_EXTEND_MID_LEFT;
+                }
+                if (gamepad2.dpad_right) {
+                    leftArmDrive.setTargetPosition(LIFT_HIGH);
+                    rightArmDrive.setTargetPosition(LIFT_HIGH);
+                    liftState = LiftState.LIFT_EXTEND_HIGH_LEFT;
+                }
+                if (gamepad2.x) {
+                    leftArmDrive.setTargetPosition(LIFT_LOW);
+                    rightArmDrive.setTargetPosition(LIFT_LOW);
+                    liftState = LiftState.LIFT_EXTEND_LOW_RIGHT;
+                }
+                if (gamepad2.y) {
+                    leftArmDrive.setTargetPosition(LIFT_MID);
+                    rightArmDrive.setTargetPosition(LIFT_MID);
+                    liftState = LiftState.LIFT_EXTEND_MID_RIGHT;
+                }
+                if (gamepad2.b) {
+                    leftArmDrive.setTargetPosition(LIFT_HIGH);
+                    rightArmDrive.setTargetPosition(LIFT_HIGH);
+                    liftState = LiftState.LIFT_EXTEND_HIGH_RIGHT;
+                }
             case LIFT_RETRACT_TRAVEL:
                 if ((Math.abs(leftArmDrive.getCurrentPosition() - LIFT_BOTTOM) < 10) && (Math.abs(rightArmDrive.getCurrentPosition() - LIFT_BOTTOM) < 10)) {
                     liftState = LiftState.LIFT_START;
@@ -389,7 +421,7 @@ public class statemachine_driver extends OpMode
                 break;
             case DRIVER_BACKWARD:
                 direction = -1;
-                if (gamepad1.a) {
+                if (gamepad1.b) {
                     driveState = DriveState.DRIVER_FORWARD;
                 }
                 break;
@@ -433,7 +465,7 @@ public class statemachine_driver extends OpMode
 
         if (gamepad1.right_bumper) {
             //grab cone
-            grab.setPosition(0.37);
+            grab.setPosition(0.35);
         }
         else if (gamepad1.left_bumper) {
             //let go cone

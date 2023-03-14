@@ -62,16 +62,9 @@ public class test extends LinearOpMode {
         while (!isStopRequested()) {
             TrajectorySequence trajSeq = drive.trajectorySequenceBuilder(startPose)
                     .addTemporalMarker(1, () -> {
-                        leftArmDrive.setTargetPosition(1700);
-                        rightArmDrive.setTargetPosition(1700);
-
-                        leftArmDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                        rightArmDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-                        leftArmDrive.setPower(0.5);
-                        leftArmDrive.setPower(0.5);
-                        rightArmDrive.setPower(0.5);
-
+                        grabberDrive.setTargetPosition(-500);
+                        grabberDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                        grabberDrive.setPower(.5);
                     })
                     /*
                     .addTemporalMarker(5, () -> {
