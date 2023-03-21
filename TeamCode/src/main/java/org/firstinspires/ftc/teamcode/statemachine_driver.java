@@ -92,7 +92,7 @@ public class statemachine_driver extends OpMode
     final int LIFT_BOTTOM = 0;
     final int LIFT_LOW = 1200;
     final int LIFT_LOW_SCORE = 900;
-    final int LIFT_MID = 2000;
+    final int LIFT_MID = 2100;
     final int LIFT_MID_SCORE = 1650;
     final int LIFT_HIGH = 2900;
     final int LIFT_HIGH_SCORE = 2550;
@@ -465,7 +465,7 @@ public class statemachine_driver extends OpMode
 
         if (gamepad1.right_bumper) {
             //grab cone
-            grab.setPosition(0.35);
+            grab.setPosition(0.38);
         }
         else if (gamepad1.left_bumper) {
             //let go cone

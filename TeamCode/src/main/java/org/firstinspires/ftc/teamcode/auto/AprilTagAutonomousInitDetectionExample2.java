@@ -458,18 +458,24 @@ public class AprilTagAutonomousInitDetectionExample2 extends LinearOpMode
                     .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {
                         grab.setPosition(0);
                     })
-                    .UNSTABLE_addTemporalMarkerOffset(0.8, () -> {
+                    .UNSTABLE_addTemporalMarkerOffset(0.7, () -> {
                         leftArmDrive.setTargetPosition(0);
                         rightArmDrive.setTargetPosition(0);
                         leftArmDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                         rightArmDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                        leftArmDrive.setPower(.8);
-                        rightArmDrive.setPower(.8);
+                        leftArmDrive.setPower(1);
+                        rightArmDrive.setPower(1);
                     })
-                    .UNSTABLE_addTemporalMarkerOffset(0.8, () -> {
-                        grabberDrive.setTargetPosition(0);
+                    .UNSTABLE_addTemporalMarkerOffset(0.7, () -> {
+                        grabberDrive.setTargetPosition(70);
                         grabberDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                        grabberDrive.setPower(1);                    })
+                        grabberDrive.setPower(1);
+                    })
+                    .UNSTABLE_addTemporalMarkerOffset(0.7, () -> {
+                        turretDrive.setTargetPosition(0);
+                        turretDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                        turretDrive.setPower(1);
+                    })
                     .waitSeconds(0.8)
                     .build();
 
