@@ -199,16 +199,6 @@ public class BasicOmniOpMode_Linear3 extends LinearOpMode {
                 grabberDrive.setPower(0);
             }
 
-            if (gamepad2.dpad_right) {
-                grabberDrive.setTargetPosition(-500);
-                grabberDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                grabberDrive.setPower(1);
-            }
-            if (gamepad2.dpad_left) {
-                grabberDrive.setTargetPosition(0);
-                grabberDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                grabberDrive.setPower(1);
-            }
 
 
 

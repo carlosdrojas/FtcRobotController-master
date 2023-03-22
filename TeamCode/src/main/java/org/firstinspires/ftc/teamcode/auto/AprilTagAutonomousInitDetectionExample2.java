@@ -129,7 +129,7 @@ public class AprilTagAutonomousInitDetectionExample2 extends LinearOpMode
                     })
                     //EXTEND ARM
                     .addTemporalMarker(1.3, () -> {
-                        grabberDrive.setTargetPosition(1000);
+                        grabberDrive.setTargetPosition(820);
                         grabberDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                         grabberDrive.setPower(1);
 
@@ -146,7 +146,7 @@ public class AprilTagAutonomousInitDetectionExample2 extends LinearOpMode
                     })
                     //TURN TURRET TO MIDDLE
                     .addTemporalMarker(1.5, () -> {
-                        turretDrive.setTargetPosition(0);
+                        turretDrive.setTargetPosition(750);
                         turretDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                         turretDrive.setPower(.6);
 
@@ -163,20 +163,20 @@ public class AprilTagAutonomousInitDetectionExample2 extends LinearOpMode
                     })
                     //TURN TURRET PRE-SCORE POS
                     .addTemporalMarker(2.6, () -> {
-                        turretDrive.setTargetPosition(100);
+                        turretDrive.setTargetPosition(850);
                         turretDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                         turretDrive.setPower(.6);
 
                     })
                     //TURN TURRET SCORE POS
                     .addTemporalMarker(3.9, () -> {
-                        turretDrive.setTargetPosition(400);
+                        turretDrive.setTargetPosition(1150);
                         turretDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                         turretDrive.setPower(.6);
 
                     })
                     //LOWER ARM SCORE POS
-                    .addTemporalMarker(4.13, () -> {
+                    .addTemporalMarker(4.15, () -> {
                         leftArmDrive.setTargetPosition(2500);
                         rightArmDrive.setTargetPosition(2500);
                         leftArmDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -192,14 +192,14 @@ public class AprilTagAutonomousInitDetectionExample2 extends LinearOpMode
                     })
                     //RETRACT ARM
                     .addTemporalMarker(5, () -> {
-                        grabberDrive.setTargetPosition(700);
+                        grabberDrive.setTargetPosition(520);
                         grabberDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                         grabberDrive.setPower(1);
 
                     })
                     //TURN TURRET TO STACK
                     .addTemporalMarker(5.2, () -> {
-                        turretDrive.setTargetPosition(-748);
+                        turretDrive.setTargetPosition(-20);
                         turretDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                         turretDrive.setPower(.6);
                     })
@@ -214,14 +214,14 @@ public class AprilTagAutonomousInitDetectionExample2 extends LinearOpMode
                     })
                     //EXTEND ARM
                     .addTemporalMarker(5.7, () -> {
-                        grabberDrive.setTargetPosition(1700);
+                        grabberDrive.setTargetPosition(1520);
                         grabberDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                         grabberDrive.setPower(1);
 
                     })
                     //EXTEND ARM FULLY
                     .addTemporalMarker(7.6, () -> {
-                        grabberDrive.setTargetPosition(2000);
+                        grabberDrive.setTargetPosition(1820);
                         grabberDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                         grabberDrive.setPower(1);
 
@@ -242,7 +242,7 @@ public class AprilTagAutonomousInitDetectionExample2 extends LinearOpMode
                     })
                     //TURN TURRET TO SCORE POS 2
                     .addTemporalMarker(9.5, () -> {
-                        turretDrive.setTargetPosition(500);
+                        turretDrive.setTargetPosition(1250);
                         turretDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                         turretDrive.setPower(.3);
                     })
@@ -258,13 +258,13 @@ public class AprilTagAutonomousInitDetectionExample2 extends LinearOpMode
                     })
                     //RETRACT ARM TO SCORE POS 2
                     .addTemporalMarker(10, () -> {
-                        grabberDrive.setTargetPosition(1500);
+                        grabberDrive.setTargetPosition(1360);
                         grabberDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                         grabberDrive.setPower(1);
 
                     })
                     //LOWER ARM TO DUNK SCORE POS 2
-                    .addTemporalMarker(11.39, () -> {
+                    .addTemporalMarker(11.49, () -> {
                         leftArmDrive.setTargetPosition(2500);
                         rightArmDrive.setTargetPosition(2500);
                         leftArmDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -285,20 +285,20 @@ public class AprilTagAutonomousInitDetectionExample2 extends LinearOpMode
                     .strafeRight(1)
                     //RETRACT ARM
                     .UNSTABLE_addTemporalMarkerOffset(0, () -> {
-                        grabberDrive.setTargetPosition(700);
+                        grabberDrive.setTargetPosition(520);
                         grabberDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                         grabberDrive.setPower(1);
                     })
                     //TURN TURRET TO GRAB 3 CONE
                     .UNSTABLE_addTemporalMarkerOffset(0.2, () -> {
-                        turretDrive.setTargetPosition(-745);
+                        turretDrive.setTargetPosition(-20);
                         turretDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                         turretDrive.setPower(.6);
                     })
                     //LOWER ARM TO GRAB 3 CONE
                     .UNSTABLE_addTemporalMarkerOffset(0.2, () -> {
-                        leftArmDrive.setTargetPosition(430);
-                        rightArmDrive.setTargetPosition(430);
+                        leftArmDrive.setTargetPosition(400);
+                        rightArmDrive.setTargetPosition(400);
                         leftArmDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                         rightArmDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                         leftArmDrive.setPower(.6);
@@ -306,13 +306,13 @@ public class AprilTagAutonomousInitDetectionExample2 extends LinearOpMode
                     })
                     //EXTEND ARM TO GRAB 3 CONE
                     .UNSTABLE_addTemporalMarkerOffset(0.8, () -> {
-                        grabberDrive.setTargetPosition(1700);
+                        grabberDrive.setTargetPosition(1520);
                         grabberDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                         grabberDrive.setPower(1);
                     })
                     //FULLY EXTEND ARM TO GRAB 3 CONE
                     .UNSTABLE_addTemporalMarkerOffset(2.7, () -> {
-                        grabberDrive.setTargetPosition(1990);
+                        grabberDrive.setTargetPosition(1800);
                         grabberDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                         grabberDrive.setPower(1);
                     })
@@ -333,7 +333,7 @@ public class AprilTagAutonomousInitDetectionExample2 extends LinearOpMode
                     })
                     //ROTATE TURRET TO 3 CONE SCORE POS
                     .UNSTABLE_addTemporalMarkerOffset(4.6, () -> {
-                        turretDrive.setTargetPosition(500);
+                        turretDrive.setTargetPosition(1250);
                         turretDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                         turretDrive.setPower(.3);
 
@@ -350,13 +350,13 @@ public class AprilTagAutonomousInitDetectionExample2 extends LinearOpMode
                     })
                     //RETRACT ARM
                     .UNSTABLE_addTemporalMarkerOffset(5.1, () -> {
-                        grabberDrive.setTargetPosition(1500);
+                        grabberDrive.setTargetPosition(1360);
                         grabberDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                         grabberDrive.setPower(1);
 
                     })
                     //LOWER ARM TO 3 CONE DUNK
-                    .UNSTABLE_addTemporalMarkerOffset(6.35, () -> {
+                    .UNSTABLE_addTemporalMarkerOffset(6.48, () -> {
                         leftArmDrive.setTargetPosition(2500);
                         rightArmDrive.setTargetPosition(2500);
                         leftArmDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -374,20 +374,20 @@ public class AprilTagAutonomousInitDetectionExample2 extends LinearOpMode
                     .strafeRight(1)
                     //RETRACT ARM
                     .UNSTABLE_addTemporalMarkerOffset(0, () -> {
-                        grabberDrive.setTargetPosition(700);
+                        grabberDrive.setTargetPosition(520);
                         grabberDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                         grabberDrive.setPower(1);
                     })
                     //TURN TURRET TO GRAB 4 CONE
                     .UNSTABLE_addTemporalMarkerOffset(0.2, () -> {
-                        turretDrive.setTargetPosition(-740);
+                        turretDrive.setTargetPosition(-20);
                         turretDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                         turretDrive.setPower(.6);
                     })
                     //LOWER ARM TO GRAB 4 CONE
                     .UNSTABLE_addTemporalMarkerOffset(0.2, () -> {
-                        leftArmDrive.setTargetPosition(370);
-                        rightArmDrive.setTargetPosition(370);
+                        leftArmDrive.setTargetPosition(290);
+                        rightArmDrive.setTargetPosition(290);
                         leftArmDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                         rightArmDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                         leftArmDrive.setPower(.6);
@@ -395,13 +395,13 @@ public class AprilTagAutonomousInitDetectionExample2 extends LinearOpMode
                     })
                     //EXTEND ARM TO GRAB 4 CONE
                     .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {
-                        grabberDrive.setTargetPosition(1700);
+                        grabberDrive.setTargetPosition(1500);
                         grabberDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                         grabberDrive.setPower(1);
                     })
                     //FULLY EXTEND ARM TO GRAB 4 CONE
                     .UNSTABLE_addTemporalMarkerOffset(1.5, () -> {
-                        grabberDrive.setTargetPosition(1985);
+                        grabberDrive.setTargetPosition(1770);
                         grabberDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                         grabberDrive.setPower(1);
                     })
@@ -422,7 +422,7 @@ public class AprilTagAutonomousInitDetectionExample2 extends LinearOpMode
                     })
                     //ROTATE TURRET TO 4 CONE SCORE POS
                     .UNSTABLE_addTemporalMarkerOffset(4.6, () -> {
-                        turretDrive.setTargetPosition(470);
+                        turretDrive.setTargetPosition(1220);
                         turretDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                         turretDrive.setPower(.3);
 
@@ -439,13 +439,13 @@ public class AprilTagAutonomousInitDetectionExample2 extends LinearOpMode
                     })
                     //RETRACT ARM
                     .UNSTABLE_addTemporalMarkerOffset(5.1, () -> {
-                        grabberDrive.setTargetPosition(1500);
+                        grabberDrive.setTargetPosition(1320);
                         grabberDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                         grabberDrive.setPower(1);
 
                     })
                     //LOWER ARM TO 4 CONE DUNK
-                    .UNSTABLE_addTemporalMarkerOffset(6.58, () -> {
+                    .UNSTABLE_addTemporalMarkerOffset(6.62, () -> {
                         leftArmDrive.setTargetPosition(2500);
                         rightArmDrive.setTargetPosition(2500);
                         leftArmDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -458,7 +458,7 @@ public class AprilTagAutonomousInitDetectionExample2 extends LinearOpMode
                     .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {
                         grab.setPosition(0);
                     })
-                    .UNSTABLE_addTemporalMarkerOffset(0.7, () -> {
+                    .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {
                         leftArmDrive.setTargetPosition(0);
                         rightArmDrive.setTargetPosition(0);
                         leftArmDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -467,12 +467,12 @@ public class AprilTagAutonomousInitDetectionExample2 extends LinearOpMode
                         rightArmDrive.setPower(1);
                     })
                     .UNSTABLE_addTemporalMarkerOffset(0.7, () -> {
-                        grabberDrive.setTargetPosition(70);
+                        grabberDrive.setTargetPosition(0);
                         grabberDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                         grabberDrive.setPower(1);
                     })
                     .UNSTABLE_addTemporalMarkerOffset(0.7, () -> {
-                        turretDrive.setTargetPosition(0);
+                        turretDrive.setTargetPosition(750);
                         turretDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                         turretDrive.setPower(1);
                     })
@@ -480,7 +480,7 @@ public class AprilTagAutonomousInitDetectionExample2 extends LinearOpMode
                     .build();
 
             TrajectorySequence left = drive.trajectorySequenceBuilder(traj1.end())
-                    .strafeLeft(33)
+                    .strafeLeft(35)
                     .build();
 
             TrajectorySequence right = drive.trajectorySequenceBuilder(traj1.end())

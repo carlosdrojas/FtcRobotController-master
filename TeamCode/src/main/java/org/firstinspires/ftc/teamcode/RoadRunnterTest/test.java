@@ -38,6 +38,7 @@ public class test extends LinearOpMode {
         grabberDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         turretDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightArmDrive.setDirection(DcMotorSimple.Direction.REVERSE);
+        grabberDrive.setDirection(DcMotorSimple.Direction.REVERSE);
         /*
         arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         arm.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -69,11 +70,25 @@ public class test extends LinearOpMode {
                         leftArmDrive.setPower(1);
                         rightArmDrive.setPower(1);
                     })
-                    .addTemporalMarker(3, () -> {
+                    .addTemporalMarker(2, () -> {
                         turretDrive.setTargetPosition(-750);
                         turretDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                         turretDrive.setPower(.6);
                     })
+                    .addTemporalMarker(3.5, () -> {
+                        grabberDrive.setTargetPosition(180);
+                        grabberDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                        grabberDrive.setPower(1);
+                    })
+                    .addTemporalMarker(4, () -> {
+                        leftArmDrive.setTargetPosition(0);
+                        rightArmDrive.setTargetPosition(0);
+                        leftArmDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                        rightArmDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                        leftArmDrive.setPower(1);
+                        rightArmDrive.setPower(1);
+                    })
+                    //actually turning 750
                     /*
                     .addTemporalMarker(5, () -> {
                         turretDrive.setTargetPosition(-700);
