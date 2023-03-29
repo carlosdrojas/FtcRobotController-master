@@ -185,6 +185,9 @@ public class BasicOmniOpMode_Linear3 extends LinearOpMode {
             leftArmDrive.setPower(gamepad2.left_stick_y);
             rightArmDrive.setPower(gamepad2.left_stick_y);
 
+            leftArmDrive.setPower(-.2);
+            rightArmDrive.setPower(-.2);
+
             //turret power
             turretDrive.setPower(gamepad2.right_stick_x);
 
@@ -207,7 +210,7 @@ public class BasicOmniOpMode_Linear3 extends LinearOpMode {
             //grabber servo control
             if (gamepad1.right_bumper) {
                 //grab cone
-                grab.setPosition(0.35);
+                grab.setPosition(0.25);
             }
             else if (gamepad1.left_bumper) {
                //let go cone

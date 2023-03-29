@@ -80,9 +80,24 @@ public class statemachine_driver extends OpMode
         DRIVER_BACKWARD,
     };
 
+
+
+    public enum LiftControlState {
+        ENCODER_CONTROL,
+        GAMEPAD_CONTROL,
+    };
+
+
+
+
+
+
+
     DriveState driveState = DriveState.DRIVER_FORWARD;
 
     LiftState liftState = LiftState.LIFT_START;
+
+    LiftControlState liftControlState = LiftControlState.ENCODER_CONTROL;
 
     ElapsedTime liftTimer = new ElapsedTime();
 
@@ -90,17 +105,21 @@ public class statemachine_driver extends OpMode
 
     final int LIFT_TRAVEL = 200;
     final int LIFT_BOTTOM = 0;
-    final int LIFT_LOW = 1200;
+    final int LIFT_LOW = 1300;
     final int LIFT_LOW_SCORE = 900;
-    final int LIFT_MID = 2100;
+    final int LIFT_MID = 2200;
     final int LIFT_MID_SCORE = 1650;
-    final int LIFT_HIGH = 2900;
+    final int LIFT_HIGH = 3000;
     final int LIFT_HIGH_SCORE = 2550;
-    final int LIFT_LEFT = -700;
-    final int LIFT_RIGHT = 700;
+    final int LIFT_LEFT = -750;
+    //non reset encoder 0
+    final int LIFT_RIGHT = 750;
+    //non reset encoder 1500
     final int LIFT_CENTER = 0;
+    //non reset encoder 750
 
     int direction;
+    double speed;
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -137,10 +156,15 @@ public class statemachine_driver extends OpMode
         rightFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
+        leftArmDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightArmDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        turretDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        grabberDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
         leftArmDrive.setTargetPosition(LIFT_BOTTOM);
         rightArmDrive.setTargetPosition(LIFT_BOTTOM);
         turretDrive.setTargetPosition(LIFT_CENTER);
-        grabberDrive.setTargetPosition(0);
+        grabberDrive.setTargetPosition(50);
 
         leftArmDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rightArmDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -164,48 +188,51 @@ public class statemachine_driver extends OpMode
     @Override
     public void loop() {
 
+        /*
         leftArmDrive.setPower(1);
         rightArmDrive.setPower(1);
         turretDrive.setPower(1);
         grabberDrive.setPower(1);
 
+         */
+
         switch (liftState) {
             case LIFT_START:
                 //wait for input
-                if (gamepad2.right_bumper) {
+                if (gamepad2.left_stick_button) {
                     //right bumper pressed, start extending
                     leftArmDrive.setTargetPosition(LIFT_TRAVEL);
                     rightArmDrive.setTargetPosition(LIFT_TRAVEL);
                     liftState = LiftState.LIFT_EXTEND_TRAVEL;
                 }
-                if (gamepad2.dpad_left) {
+                if (gamepad2.dpad_down) {
                     //left dpad pressed, start extending
                     leftArmDrive.setTargetPosition(LIFT_LOW);
                     rightArmDrive.setTargetPosition(LIFT_LOW);
                     liftState = LiftState.LIFT_EXTEND_LOW_LEFT;
                 }
-                if (gamepad2.dpad_up) {
+                if (gamepad2.dpad_right) {
                     //up dpad pressed, start extending
                     leftArmDrive.setTargetPosition(LIFT_MID);
                     rightArmDrive.setTargetPosition(LIFT_MID);
                     liftState = LiftState.LIFT_EXTEND_MID_LEFT;
                 }
-                if (gamepad2.dpad_right) {
+                if (gamepad2.dpad_up) {
                     leftArmDrive.setTargetPosition(LIFT_HIGH);
                     rightArmDrive.setTargetPosition(LIFT_HIGH);
                     liftState = LiftState.LIFT_EXTEND_HIGH_LEFT;
                 }
-                if (gamepad2.x) {
+                if (gamepad2.a) {
                     leftArmDrive.setTargetPosition(LIFT_LOW);
                     rightArmDrive.setTargetPosition(LIFT_LOW);
                     liftState = LiftState.LIFT_EXTEND_LOW_RIGHT;
                 }
-                if (gamepad2.y) {
+                if (gamepad2.x) {
                     leftArmDrive.setTargetPosition(LIFT_MID);
                     rightArmDrive.setTargetPosition(LIFT_MID);
                     liftState = LiftState.LIFT_EXTEND_MID_RIGHT;
                 }
-                if (gamepad2.b) {
+                if (gamepad2.y) {
                     leftArmDrive.setTargetPosition(LIFT_HIGH);
                     rightArmDrive.setTargetPosition(LIFT_HIGH);
                     liftState = LiftState.LIFT_EXTEND_HIGH_RIGHT;
@@ -214,39 +241,39 @@ public class statemachine_driver extends OpMode
 
             case LIFT_EXTEND_TRAVEL:
                 //check if lift has extended to travel, otherwise do nothing
-                if ((Math.abs(leftArmDrive.getCurrentPosition() - LIFT_TRAVEL) < 10) && (Math.abs(rightArmDrive.getCurrentPosition() - LIFT_TRAVEL) < 10) && gamepad2.a) {
+                if ((Math.abs(leftArmDrive.getCurrentPosition() - LIFT_TRAVEL) < 10) && (Math.abs(rightArmDrive.getCurrentPosition() - LIFT_TRAVEL) < 10) && gamepad2.b) {
                     leftArmDrive.setTargetPosition(LIFT_BOTTOM);
                     rightArmDrive.setTargetPosition(LIFT_BOTTOM);
                     liftState = LiftState.LIFT_RETRACT_TRAVEL;
                 }
-                if (gamepad2.dpad_left) {
+                if (gamepad2.dpad_down) {
                     //left dpad pressed, start extending
                     leftArmDrive.setTargetPosition(LIFT_LOW);
                     rightArmDrive.setTargetPosition(LIFT_LOW);
                     liftState = LiftState.LIFT_EXTEND_LOW_LEFT;
                 }
-                if (gamepad2.dpad_up) {
+                if (gamepad2.dpad_right) {
                     //up dpad pressed, start extending
                     leftArmDrive.setTargetPosition(LIFT_MID);
                     rightArmDrive.setTargetPosition(LIFT_MID);
                     liftState = LiftState.LIFT_EXTEND_MID_LEFT;
                 }
-                if (gamepad2.dpad_right) {
+                if (gamepad2.dpad_up) {
                     leftArmDrive.setTargetPosition(LIFT_HIGH);
                     rightArmDrive.setTargetPosition(LIFT_HIGH);
                     liftState = LiftState.LIFT_EXTEND_HIGH_LEFT;
                 }
-                if (gamepad2.x) {
+                if (gamepad2.a) {
                     leftArmDrive.setTargetPosition(LIFT_LOW);
                     rightArmDrive.setTargetPosition(LIFT_LOW);
                     liftState = LiftState.LIFT_EXTEND_LOW_RIGHT;
                 }
-                if (gamepad2.y) {
+                if (gamepad2.x) {
                     leftArmDrive.setTargetPosition(LIFT_MID);
                     rightArmDrive.setTargetPosition(LIFT_MID);
                     liftState = LiftState.LIFT_EXTEND_MID_RIGHT;
                 }
-                if (gamepad2.b) {
+                if (gamepad2.y) {
                     leftArmDrive.setTargetPosition(LIFT_HIGH);
                     rightArmDrive.setTargetPosition(LIFT_HIGH);
                     liftState = LiftState.LIFT_EXTEND_HIGH_RIGHT;
@@ -261,13 +288,13 @@ public class statemachine_driver extends OpMode
                 if ((Math.abs(leftArmDrive.getCurrentPosition() - LIFT_LOW) < 20) && (Math.abs(rightArmDrive.getCurrentPosition() - LIFT_LOW) < 20)) {
                     turretDrive.setTargetPosition(LIFT_LEFT);
                 }
-                if (gamepad2.dpad_down) {
+                if (gamepad2.dpad_left) {
                     liftTimer.reset();
                     leftArmDrive.setTargetPosition(LIFT_LOW_SCORE);
                     rightArmDrive.setTargetPosition(LIFT_LOW_SCORE);
                     liftState = LiftState.LIFT_SCORE_LOW_LEFT;
                 }
-                if (gamepad2.a) {
+                if (gamepad2.b) {
                     leftArmDrive.setTargetPosition(LIFT_BOTTOM);
                     rightArmDrive.setTargetPosition(LIFT_BOTTOM);
                     turretDrive.setTargetPosition(LIFT_CENTER);
@@ -291,13 +318,13 @@ public class statemachine_driver extends OpMode
                 if ((Math.abs(leftArmDrive.getCurrentPosition() - LIFT_MID) < 20) && (Math.abs(rightArmDrive.getCurrentPosition() - LIFT_MID) < 20)) {
                     turretDrive.setTargetPosition(LIFT_LEFT);
                 }
-                if (gamepad2.dpad_down) {
+                if (gamepad2.dpad_left) {
                     liftTimer.reset();
                     leftArmDrive.setTargetPosition(LIFT_MID_SCORE);
                     rightArmDrive.setTargetPosition(LIFT_MID_SCORE);
                     liftState = LiftState.LIFT_SCORE_MID_LEFT;
                 }
-                if (gamepad2.a) {
+                if (gamepad2.b) {
                     leftArmDrive.setTargetPosition(LIFT_BOTTOM);
                     rightArmDrive.setTargetPosition(LIFT_BOTTOM);
                     turretDrive.setTargetPosition(LIFT_CENTER);
@@ -315,13 +342,13 @@ public class statemachine_driver extends OpMode
                 if ((Math.abs(leftArmDrive.getCurrentPosition() - LIFT_HIGH) < 20) && (Math.abs(rightArmDrive.getCurrentPosition() - LIFT_HIGH) < 20)) {
                     turretDrive.setTargetPosition(LIFT_LEFT);
                 }
-                if (gamepad2.dpad_down) {
+                if (gamepad2.dpad_left) {
                     liftTimer.reset();
                     leftArmDrive.setTargetPosition(LIFT_HIGH_SCORE);
                     rightArmDrive.setTargetPosition(LIFT_HIGH_SCORE);
                     liftState = LiftState.LIFT_SCORE_HIGH_LEFT;
                 }
-                if (gamepad2.a) {
+                if (gamepad2.b) {
                     leftArmDrive.setTargetPosition(LIFT_BOTTOM);
                     rightArmDrive.setTargetPosition(LIFT_BOTTOM);
                     turretDrive.setTargetPosition(LIFT_CENTER);
@@ -339,13 +366,13 @@ public class statemachine_driver extends OpMode
                 if ((Math.abs(leftArmDrive.getCurrentPosition() - LIFT_LOW) < 20) && (Math.abs(rightArmDrive.getCurrentPosition() - LIFT_LOW) < 20)) {
                     turretDrive.setTargetPosition(LIFT_RIGHT);
                 }
-                if (gamepad2.dpad_down) {
+                if (gamepad2.dpad_left) {
                     liftTimer.reset();
                     leftArmDrive.setTargetPosition(LIFT_LOW_SCORE);
                     rightArmDrive.setTargetPosition(LIFT_LOW_SCORE);
                     liftState = LiftState.LIFT_SCORE_LOW_RIGHT;
                 }
-                if (gamepad2.a) {
+                if (gamepad2.b) {
                     leftArmDrive.setTargetPosition(LIFT_BOTTOM);
                     rightArmDrive.setTargetPosition(LIFT_BOTTOM);
                     turretDrive.setTargetPosition(LIFT_CENTER);
@@ -363,13 +390,13 @@ public class statemachine_driver extends OpMode
                 if ((Math.abs(leftArmDrive.getCurrentPosition() - LIFT_MID) < 20) && (Math.abs(rightArmDrive.getCurrentPosition() - LIFT_MID) < 20)) {
                     turretDrive.setTargetPosition(LIFT_RIGHT);
                 }
-                if (gamepad2.dpad_down) {
+                if (gamepad2.dpad_left) {
                     liftTimer.reset();
                     leftArmDrive.setTargetPosition(LIFT_MID_SCORE);
                     rightArmDrive.setTargetPosition(LIFT_MID_SCORE);
                     liftState = LiftState.LIFT_SCORE_MID_RIGHT;
                 }
-                if (gamepad2.a) {
+                if (gamepad2.b) {
                     leftArmDrive.setTargetPosition(LIFT_BOTTOM);
                     rightArmDrive.setTargetPosition(LIFT_BOTTOM);
                     turretDrive.setTargetPosition(LIFT_CENTER);
@@ -387,13 +414,13 @@ public class statemachine_driver extends OpMode
                 if ((Math.abs(leftArmDrive.getCurrentPosition() - LIFT_HIGH) < 20) && (Math.abs(rightArmDrive.getCurrentPosition() - LIFT_HIGH) < 20)) {
                     turretDrive.setTargetPosition(LIFT_RIGHT);
                 }
-                if (gamepad2.dpad_down) {
+                if (gamepad2.dpad_left) {
                     liftTimer.reset();
                     leftArmDrive.setTargetPosition(LIFT_HIGH_SCORE);
                     rightArmDrive.setTargetPosition(LIFT_HIGH_SCORE);
                     liftState = LiftState.LIFT_SCORE_HIGH_RIGHT;
                 }
-                if (gamepad2.a) {
+                if (gamepad2.b) {
                     leftArmDrive.setTargetPosition(LIFT_BOTTOM);
                     rightArmDrive.setTargetPosition(LIFT_BOTTOM);
                     turretDrive.setTargetPosition(LIFT_CENTER);
@@ -429,6 +456,64 @@ public class statemachine_driver extends OpMode
 
 
 
+        switch (liftControlState) {
+            case ENCODER_CONTROL:
+                leftArmDrive.setPower(1);
+                rightArmDrive.setPower(1);
+                turretDrive.setPower(1);
+                grabberDrive.setPower(1);
+
+                if (gamepad2.left_bumper) {
+                    liftControlState = LiftControlState.GAMEPAD_CONTROL;
+                }
+                break;
+            case GAMEPAD_CONTROL:
+
+                leftArmDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                rightArmDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                grabberDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                turretDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+                leftArmDrive.setPower(-gamepad2.left_stick_y);
+                rightArmDrive.setPower(-gamepad2.left_stick_y);
+                grabberDrive.setPower(gamepad2.right_stick_y);
+                turretDrive.setPower(gamepad2.right_stick_x);
+                leftArmDrive.setPower(.2);
+                rightArmDrive.setPower(.2);
+
+
+
+
+                if (gamepad2.right_bumper) {
+                    leftArmDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                    rightArmDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                    grabberDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                    turretDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+                    leftArmDrive.setTargetPosition(LIFT_BOTTOM);
+                    rightArmDrive.setTargetPosition(LIFT_BOTTOM);
+                    grabberDrive.setTargetPosition(0);
+                    turretDrive.setTargetPosition(LIFT_CENTER);
+
+
+                    leftArmDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                    rightArmDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                    grabberDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                    turretDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+                    liftControlState = LiftControlState.ENCODER_CONTROL;
+
+                }
+                break;
+        }
+
+
+
+
+
+
+
+
         double max;
 
         // POV Mode uses left joystick to go forward & strafe, and right joystick to rotate.
@@ -438,10 +523,10 @@ public class statemachine_driver extends OpMode
 
         // Combine the joystick requests for each axis-motion to determine each wheel's power.
         // Set up a variable for each drive wheel to save the power level for telemetry.
-        double leftFrontPower  = axial + lateral + yaw;
-        double rightFrontPower = axial - lateral - yaw;
-        double leftBackPower   = axial - lateral + yaw;
-        double rightBackPower  = axial + lateral - yaw;
+        double leftFrontPower  = (axial + lateral + yaw) * speed;
+        double rightFrontPower = (axial - lateral - yaw) * speed;
+        double leftBackPower   = (axial - lateral + yaw) * speed;
+        double rightBackPower  = (axial + lateral - yaw) * speed;
 
         // Normalize the values so no wheel power exceeds 100%
         // This ensures that the robot maintains the desired motion.
@@ -463,15 +548,41 @@ public class statemachine_driver extends OpMode
         leftBackDrive.setPower(leftBackPower * 0.8);
         rightBackDrive.setPower(rightBackPower * 0.8);
 
+        /*
+        leftArmDrive.setPower(-gamepad2.left_stick_y);
+        rightArmDrive.setPower(gamepad2.left_stick_y);
+        grabberDrive.setPower(gamepad2.right_stick_y);
+
+         */
+
+        /*
+        if (gamepad2.left_bumper) {
+            leftArmDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            rightArmDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            grabberDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        }
+
+         */
+
         if (gamepad1.right_bumper) {
             //grab cone
-            grab.setPosition(0.38);
+            grab.setPosition(0.27);
         }
         else if (gamepad1.left_bumper) {
             //let go cone
             grab.setPosition(0);
         }
-        //
+
+        if (gamepad1.left_trigger >= .2) {
+            speed = 5;
+        }
+        else if (gamepad1.right_trigger >= .2) {
+            speed = .5;
+        }
+        else {
+            speed = 1;
+        }
+
 
         // Show the elapsed game time and wheel power.
         telemetry.addData("Status", "Run Time: " + runtime.toString());
